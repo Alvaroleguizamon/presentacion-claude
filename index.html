@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IA & Vibecoding — Presentacion</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a26;
+      --border: #2a2a3a;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --accent3: #06b6d4;
+      --accent4: #10b981;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --highlight: #fbbf24;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #slides {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 80px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateX(60px);
+      text-align: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+    }
+
+    .slide.exit {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    #nav {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(18,18,26,0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 20px;
+      z-index: 100;
+    }
+
+    #nav button {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    #nav button:hover { background: var(--surface2); }
+    #nav button:disabled { opacity: 0.3; cursor: default; }
+
+    #progress {
+      font-size: 13px;
+      color: var(--muted);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    #dots {
+      position: fixed;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .dot.active {
+      background: var(--accent2);
+      transform: scale(1.4);
+    }
+
+    #hint {
+      position: fixed;
+      top: 20px;
+      right: 28px;
+      font-size: 11px;
+      color: var(--border);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 5vw, 72px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: clamp(26px, 3.5vw, 48px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: clamp(16px, 1.8vw, 22px);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    p, li {
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 1400px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gradient-text-warm {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      width: 100%;
+      max-width: 1400px;
+      margin-top: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      width: 100%;
+      max-width: 1400px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 18px;
+      text-align: left;
+    }
+
+    .card .icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 { color: var(--text); }
+    .card p { font-size: 13px; }
+
+    .example-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--highlight);
+    }
+
+    .code-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-align: left;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #a5f3fc;
+      width: 100%;
+      max-width: 900px;
+      margin-top: 16px;
+      line-height: 1.8;
+    }
+
+    .code-block .comment { color: #4b5563; }
+    .code-block .cmd { color: #86efac; }
+    .code-block .kw { color: #c084fc; }
+    .code-block .str { color: #fbbf24; }
+
+    ul { list-style: none; text-align: left; max-width: 1400px; }
+    ul li { padding: 5px 0; }
+    ul li::before { content: "→ "; color: var(--accent2); font-weight: 700; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .analogy-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: 3px solid var(--highlight);
+      border-radius: 0 12px 12px 0;
+      padding: 14px 20px;
+      margin-top: 14px;
+      text-align: left;
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .analogy-box .alabel {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--highlight);
+      margin-bottom: 6px;
+    }
+
+    .analogy-box p {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 100%;
+    }
+
+    .slide-hero   { background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.18) 0%, transparent 70%), var(--bg); }
+    .slide-github { background: radial-gradient(ellipse 70% 50% at 30% 100%, rgba(16,185,129,0.1) 0%, transparent 70%), var(--bg); }
+    .slide-vercel { background: radial-gradient(ellipse 70% 50% at 70% 0%, rgba(255,255,255,0.04) 0%, transparent 70%), var(--bg); }
+    .slide-api    { background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(6,182,212,0.1) 0%, transparent 70%), var(--bg); }
+    .slide-anthropic { background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(251,191,36,0.08) 0%, transparent 70%), var(--bg); }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 1400px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .compare-card {
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: left;
+    }
+
+    .compare-card.pro {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(168,85,247,0.08));
+      border: 1px solid rgba(168,85,247,0.4);
+    }
+
+    .compare-card.api {
+      background: linear-gradient(135deg, rgba(6,182,212,0.12), rgba(16,185,129,0.06));
+      border: 1px solid rgba(6,182,212,0.4);
+    }
+
+    .compare-card h3 { font-size: 18px; margin-bottom: 12px; }
+    .compare-card .price { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+    .compare-card ul li { font-size: 13px; color: var(--muted); }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .flow-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      min-width: 110px;
+    }
+
+    .flow-arrow {
+      color: var(--accent2);
+      font-size: 22px;
+      padding: 0 6px;
+    }
+
+    /* ── Bilingual styles ── */
+    .lang-en {
+      font-style: italic;
+      color: var(--muted);
+      font-size: 0.82em;
+      display: block;
+      margin-top: 2px;
+      line-height: 1.3;
+      opacity: 0.75;
+    }
+
+    /* Toggle button */
+    #lang-toggle {
+      position: fixed;
+      top: 16px;
+      left: 20px;
+      z-index: 200;
+      background: rgba(18,18,26,0.9);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.2s, color 0.2s;
+      letter-spacing: 0.05em;
+    }
+    #lang-toggle:hover {
+      border-color: var(--accent2);
+      color: var(--text);
+    }
+    #lang-toggle.en-hidden {
+      color: var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<button id="lang-toggle" title="Toggle English translations">ES | EN</button>
+<div id="hint">← → o teclas de flecha</div>
+<div id="dots"></div>
+
+<div id="slides">
+
+  <!-- ══════════════════════════ -->
+  <!-- 1 · HERO                  -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-hero active" data-index="0">
+    <div class="tag" style="background:rgba(124,58,237,0.2);color:#a855f7;">
+      <span class="lang-es">Charla 2026</span>
+      <span class="lang-en">2026 Talk</span>
+    </div>
+    <h1>
+      <span class="lang-es">Inteligencia Artificial<br><span class="gradient-text">&amp; Vibecoding</span></span>
+      <span class="lang-en" style="font-size:0.5em;margin-top:6px;">Artificial Intelligence &amp; Vibecoding</span>
+    </h1>
+    <p style="max-width:1100px;margin-top:8px;">
+      <span class="lang-es">De la idea al producto en horas. Cómo las herramientas de IA están cambiando la forma en que construimos software.</span>
+      <span class="lang-en">From idea to product in hours. How AI tools are reshaping the way we build software.</span>
+    </p>
+    <div style="display:flex;gap:12px;margin-top:32px;flex-wrap:wrap;justify-content:center;">
+      <span class="badge" style="background:rgba(124,58,237,0.15);border:1px solid rgba(168,85,247,0.3);color:#a855f7;">🤖 Claude / Anthropic</span>
+      <span class="badge" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#34d399;">🐙 GitHub</span>
+      <span class="badge" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0;">▲ Vercel</span>
+      <span class="badge" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);color:#22d3ee;">⚡ APIs</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 2 · QUÉ ES LA IA          -->
+  <!-- ══════════════════════════ -->
+  <!-- ══════════════════════════ -->
+  <!-- 2 · QUÉ ES CLAUDE         -->
+  <!-- ══════════════════════════ -->
+  <div class="slide" data-index="1">
+    <div class="tag" style="background:rgba(124,58,237,0.15);color:#a855f7;">Anthropic</div>
+    <h2>
+      <span class="lang-es">¿Qué es <span class="gradient-text">Claude</span>?</span>
+      <span class="lang-en" style="font-size:0.6em;margin-top:4px;">What is <span class="gradient-text">Claude</span>?</span>
+    </h2>
+    <p>
+      <span class="lang-es">Claude es el modelo de IA de Anthropic. Diseñado para ser útil, inofensivo y honesto. Muy bueno para razonar, escribir código y explicar cosas complejas.</span>
+      <span class="lang-en">Claude is Anthropic's AI model. Designed to be helpful, harmless, and honest. Exceptionally good at reasoning, writing code, and explaining complex topics.</span>
+    </p>
+    <div class="grid-3" style="margin-top:20px;">
+      <div class="card">
+        <div class="icon">✍️</div>
+        <h3>
+          <span class="lang-es">Redacción</span>
+          <span class="lang-en">Writing</span>
+        </h3>
+        <p>
+          <span class="lang-es">Emails, contratos, posts para redes. Adapta el tono y estilo.</span>
+          <span class="lang-en">Emails, contracts, social media posts. Adapts tone and style.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ "Reescribí esto más formal"</span>
+          <span class="lang-en">✦ "Rewrite this in a more formal tone"</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">💻</div>
+        <h3>
+          <span class="lang-es">Código</span>
+          <span class="lang-en">Code</span>
+        </h3>
+        <p>
+          <span class="lang-es">Genera, revisa y debuggea código en cualquier lenguaje.</span>
+          <span class="lang-en">Generates, reviews, and debugs code in any language.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ "Hacé una web para mi negocio"</span>
+          <span class="lang-en">✦ "Build a website for my business"</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🔍</div>
+        <h3>
+          <span class="lang-es">Análisis</span>
+          <span class="lang-en">Analysis</span>
+        </h3>
+        <p>
+          <span class="lang-es">Lee documentos, contratos, datos y los resume o explica.</span>
+          <span class="lang-en">Reads documents, contracts, and data — then summarizes or explains them.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ "Explicame este contrato en simple"</span>
+          <span class="lang-en">✦ "Explain this contract in plain English"</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <span class="badge" style="background:rgba(124,58,237,0.1);border:1px solid rgba(168,85,247,0.3);color:#a855f7;">
+        <span class="lang-es">Claude Haiku · Rápido</span>
+        <span class="lang-en">Claude Haiku · Fast</span>
+      </span>
+      <span class="badge" style="background:rgba(124,58,237,0.15);border:1px solid rgba(168,85,247,0.4);color:#c084fc;">
+        <span class="lang-es">Claude Sonnet · Balanceado</span>
+        <span class="lang-en">Claude Sonnet · Balanced</span>
+      </span>
+      <span class="badge" style="background:rgba(124,58,237,0.2);border:1px solid rgba(168,85,247,0.5);color:#e879f9;">
+        <span class="lang-es">Claude Opus · Máximo poder</span>
+        <span class="lang-en">Claude Opus · Maximum power</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 4 · VIBECODING            -->
+  <!-- ══════════════════════════ -->
+  <div class="slide" data-index="2">
+    <div class="tag" style="background:rgba(251,191,36,0.1);color:#fbbf24;">
+      <span class="lang-es">Tendencia 2025</span>
+      <span class="lang-en">2025 Trend</span>
+    </div>
+    <h2>
+      <span class="lang-es">¿Qué es el <span class="gradient-text-warm">Vibecoding</span>?</span>
+      <span class="lang-en" style="font-size:0.6em;margin-top:4px;">What is <span class="gradient-text-warm">Vibecoding</span>?</span>
+    </h2>
+    <p>
+      <span class="lang-es">Término acuñado por Andrej Karpathy. Programar <strong style="color:var(--text)">describiendo lo que querés</strong> en lenguaje natural y dejando que la IA genere el código.</span>
+      <span class="lang-en">A term coined by Andrej Karpathy. Coding by <strong style="color:var(--text)">describing what you want</strong> in plain language and letting AI generate the code.</span>
+    </p>
+    <div class="flow" style="margin-top:24px;">
+      <div class="flow-step">💡 <span class="lang-es">Idea</span><span class="lang-en">Idea</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">✍️ <span class="lang-es">Prompt a Claude</span><span class="lang-en">Prompt Claude</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">💻 <span class="lang-es">Código generado</span><span class="lang-en">Code generated</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🔍 <span class="lang-es">Revisás</span><span class="lang-en">You review</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🚀 Deploy</div>
+    </div>
+    <div class="analogy-box" style="margin-top:20px;">
+      <div class="alabel">
+        <span class="lang-es">Ejemplo real</span>
+        <span class="lang-en" style="text-transform:none;letter-spacing:0;">Real example</span>
+      </div>
+      <p>
+        <span class="lang-es">"Quiero una web para mi emprendimiento de tortas con galería de fotos, lista de precios y formulario de contacto. Colores rosa y blanco, estilo moderno." → Claude construye todo. Vos revisás y pedís ajustes.</span>
+        <span class="lang-en">"I want a website for my cake business with a photo gallery, price list, and contact form. Pink and white colors, modern style." → Claude builds everything. You review and request tweaks.</span>
+      </p>
+    </div>
+    <div style="margin-top:16px;padding:16px 22px;background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.15);border-radius:12px;max-width:1400px;">
+      <p style="color:var(--text);font-style:italic;font-size:14px;">
+        <span class="lang-es">"No necesitás saber programar. Necesitás saber <strong style="color:#fbbf24">qué querés construir</strong>."</span>
+        <span class="lang-en">"You don't need to know how to code. You need to know <strong style="color:#fbbf24">what you want to build</strong>."</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 4 · INSTALACIÓN           -->
+  <!-- ══════════════════════════ -->
+  <div class="slide" data-index="3" style="padding:40px 60px;">
+    <div class="tag" style="background:rgba(16,185,129,0.1);color:#34d399;">
+      <span class="lang-es">Primeros pasos</span><span class="lang-en">Getting started</span>
+    </div>
+    <h2>🛠️ <span class="lang-es">Instalación de <span style="color:#34d399;">Claude Code</span></span><span class="lang-en" style="font-size:0.7em;color:#34d399;">Installing Claude Code</span></h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;max-width:1400px;width:100%;">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:left;">
+        <h3 style="font-size:13px;color:#34d399;margin-bottom:14px;"><span class="lang-es">Pasos de instalación</span><span class="lang-en">Installation steps</span></h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="background:rgba(16,185,129,0.2);color:#34d399;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</span>
+            <div>
+              <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px;"><span class="lang-es">Instalá Node.js</span><span class="lang-en">Install Node.js</span></div>
+              <div style="font-size:11px;color:var(--muted);"><span class="lang-es">Descargalo desde</span><span class="lang-en">Download from</span> <span style="color:#34d399;">nodejs.org</span> <span style="font-size:10px;">(v18+)</span></div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="background:rgba(16,185,129,0.2);color:#34d399;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</span>
+            <div style="width:100%;">
+              <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px;"><span class="lang-es">Instalá Claude Code globalmente</span><span class="lang-en">Install Claude Code globally</span></div>
+              <code style="display:block;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:#86efac;font-family:monospace;">npm install -g @anthropic-ai/claude-code</code>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="background:rgba(16,185,129,0.2);color:#34d399;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</span>
+            <div style="width:100%;">
+              <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px;"><span class="lang-es">Abrí tu proyecto en la terminal</span><span class="lang-en">Open your project in the terminal</span></div>
+              <code style="display:block;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:#86efac;font-family:monospace;">cd mi-proyecto</code>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="background:rgba(16,185,129,0.2);color:#34d399;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">4</span>
+            <div style="width:100%;">
+              <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px;"><span class="lang-es">Lanzá Claude Code</span><span class="lang-en">Launch Claude Code</span></div>
+              <code style="display:block;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:#86efac;font-family:monospace;">claude</code>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <span style="background:rgba(16,185,129,0.2);color:#34d399;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">5</span>
+            <div>
+              <div style="font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px;"><span class="lang-es">Autenticá con tu cuenta de Anthropic</span><span class="lang-en">Authenticate with your Anthropic account</span></div>
+              <div style="font-size:11px;color:var(--muted);"><span class="lang-es">Te va a pedir login en el browser — listo.</span><span class="lang-en">It'll ask you to log in via browser — done.</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:left;">
+          <h3 style="font-size:13px;color:#a855f7;margin-bottom:10px;">📋 <span class="lang-es">Requisitos</span><span class="lang-en">Requirements</span></h3>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted);">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#34d399;">✓</span>
+              <span><strong style="color:var(--text);">Node.js v18+</strong> — <span class="lang-es">el motor de JavaScript</span><span class="lang-en">the JavaScript runtime</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#34d399;">✓</span>
+              <span><strong style="color:var(--text);">npm</strong> — <span class="lang-es">viene incluido con Node.js</span><span class="lang-en">comes bundled with Node.js</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#34d399;">✓</span>
+              <span><strong style="color:var(--text);"><span class="lang-es">Cuenta en</span><span class="lang-en">Account on</span> anthropic.com</strong> — <span class="lang-es">gratis para empezar</span><span class="lang-en">free to start</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#34d399;">✓</span>
+              <span><strong style="color:var(--text);">Terminal</strong> — <span class="lang-es">en Mac/Linux ya la tenés. Windows: usar WSL</span><span class="lang-en">built-in on Mac/Linux. Windows: use WSL</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.2);border-radius:14px;padding:16px;text-align:left;">
+          <h3 style="font-size:13px;color:#fbbf24;margin-bottom:8px;">💡 <span class="lang-es">Tip: inicializá el proyecto</span><span class="lang-en">Tip: initialize your project</span></h3>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">
+            <span class="lang-es">Una vez dentro, corré <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">/init</code> para que Claude analice tu proyecto y cree el <strong style="color:var(--text);">CLAUDE.md</strong> automáticamente.</span>
+            <span class="lang-en">Once inside, run <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">/init</code> so Claude analyzes your project and auto-creates the <strong style="color:var(--text);">CLAUDE.md</strong> file.</span>
+          </p>
+          <code style="display:block;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:11px;color:#fbbf24;font-family:monospace;">/init</code>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 5 · GITHUB INTRO          -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-github" data-index="4">
+    <div class="tag" style="background:rgba(16,185,129,0.1);color:#34d399;">
+      <span class="lang-es">Herramientas</span>
+      <span class="lang-en">Tools</span>
+    </div>
+    <h2>🐙 <span style="color:#34d399;">GitHub</span> — <span class="lang-es">Control de versiones</span><span class="lang-en" style="font-size:0.7em;"> Version control</span></h2>
+    <p>
+      <span class="lang-es">GitHub es donde los programadores guardan, comparten y colaboran en código. Está basado en <strong style="color:var(--text)">Git</strong>, un sistema de control de versiones.</span>
+      <span class="lang-en">GitHub is where developers store, share, and collaborate on code. It's built on <strong style="color:var(--text)">Git</strong>, a version control system.</span>
+    </p>
+    <div class="grid-2" style="margin-top:20px;">
+      <div class="card">
+        <div class="icon">📁</div>
+        <h3>
+          <span class="lang-es">Repositorio (Repo)</span>
+          <span class="lang-en">Repository (Repo)</span>
+        </h3>
+        <p>
+          <span class="lang-es">La "carpeta" del proyecto en la nube. Contiene el código, el historial de cambios y la documentación.</span>
+          <span class="lang-en">The project's "folder" in the cloud. Contains the code, change history, and documentation.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como Google Drive pero para código</span>
+          <span class="lang-en">✦ Like Google Drive, but for code</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🌿</div>
+        <h3>
+          <span class="lang-es">Branch (Rama)</span>
+          <span class="lang-en">Branch</span>
+        </h3>
+        <p>
+          <span class="lang-es">Una copia paralela del código para experimentar sin romper el proyecto principal.</span>
+          <span class="lang-en">A parallel copy of the code to experiment without breaking the main project.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como duplicar un doc antes de editarlo</span>
+          <span class="lang-en">✦ Like duplicating a doc before editing it</span>
+        </div>
+      </div>
+    </div>
+    <div class="analogy-box">
+      <div class="alabel">
+        <span class="lang-es">Analogía</span>
+        <span class="lang-en" style="text-transform:none;letter-spacing:0;">Analogy</span>
+      </div>
+      <p>
+        <span class="lang-es">GitHub es como Google Docs, pero en vez de guardar solo la versión actual, guarda <strong style="color:var(--text)">cada cambio que hiciste</strong>, quién lo hizo y cuándo. Podés volver a cualquier versión anterior con un click.</span>
+        <span class="lang-en">GitHub is like Google Docs, but instead of saving only the current version, it saves <strong style="color:var(--text)">every change you ever made</strong>, who made it, and when. You can roll back to any previous version with one click.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 6 · GIT COMMANDS          -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-github" data-index="5">
+    <div class="tag" style="background:rgba(16,185,129,0.1);color:#34d399;">
+      <span class="lang-es">Git en la práctica</span>
+      <span class="lang-en">Git in practice</span>
+    </div>
+    <h2>
+      <span class="lang-es">Los comandos <span style="color:#34d399;">esenciales</span></span>
+      <span class="lang-en" style="font-size:0.6em;margin-top:4px;">The <span style="color:#34d399;">essential</span> commands</span>
+    </h2>
+    <div class="grid-2" style="margin-top:16px;max-width:1400px;">
+      <div class="card">
+        <div class="icon">📸</div>
+        <h3><code style="color:#86efac;">git commit</code></h3>
+        <p>
+          <span class="lang-es">Guarda una "foto" del estado del proyecto con un mensaje descriptivo.</span>
+          <span class="lang-en">Saves a "snapshot" of the project state with a descriptive message.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como hacer Ctrl+S con descripción</span>
+          <span class="lang-en">✦ Like Ctrl+S with a description attached</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">☁️</div>
+        <h3><code style="color:#86efac;">git push</code></h3>
+        <p>
+          <span class="lang-es">Sube los cambios guardados a GitHub (la nube). Hasta que hacés push, solo existen en tu compu.</span>
+          <span class="lang-en">Uploads your saved changes to GitHub (the cloud). Until you push, they only exist on your machine.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como subir un archivo a Drive</span>
+          <span class="lang-en">✦ Like uploading a file to Drive</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">⬇️</div>
+        <h3><code style="color:#86efac;">git pull</code></h3>
+        <p>
+          <span class="lang-es">Baja los últimos cambios que subió el equipo. "Traeme lo más nuevo."</span>
+          <span class="lang-en">Downloads the latest changes uploaded by the team. "Give me what's new."</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como sincronizar Google Drive</span>
+          <span class="lang-en">✦ Like syncing Google Drive</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🔀</div>
+        <h3><code style="color:#86efac;">git merge</code></h3>
+        <p>
+          <span class="lang-es">Une los cambios de una rama con otra. Integra el trabajo de dos personas o dos momentos.</span>
+          <span class="lang-en">Combines changes from one branch into another. Integrates work from two people or two points in time.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como combinar dos versiones de un doc</span>
+          <span class="lang-en">✦ Like merging two versions of a document</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 7 · VERCEL                -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-vercel" data-index="6">
+    <div class="tag" style="background:rgba(255,255,255,0.08);color:#e2e8f0;">
+      <span class="lang-es">Deploy</span>
+      <span class="lang-en">Deployment</span>
+    </div>
+    <h2>▲ <span style="color:#ffffff;">Vercel</span> — <span class="lang-es">Tu app en internet</span><span class="lang-en" style="font-size:0.7em;"> Your app on the web</span></h2>
+    <p>
+      <span class="lang-es">Vercel toma tu código de GitHub y lo publica en internet <strong style="color:var(--text)">automáticamente cada vez que hacés un push.</strong> Sin servidores, sin configuración compleja.</span>
+      <span class="lang-en">Vercel takes your code from GitHub and publishes it online <strong style="color:var(--text)">automatically every time you push.</strong> No servers, no complex configuration.</span>
+    </p>
+    <div class="grid-3" style="margin-top:20px;">
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>
+          <span class="lang-es">Deploy automático</span>
+          <span class="lang-en">Automatic deploy</span>
+        </h3>
+        <p>
+          <span class="lang-es">Push a GitHub → Vercel lo detecta → tu app está live en segundos.</span>
+          <span class="lang-en">Push to GitHub → Vercel detects it → your app is live in seconds.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como publicar en Instagram, pero tu web</span>
+          <span class="lang-en">✦ Like posting on Instagram, but for your website</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🌍</div>
+        <h3>CDN Global</h3>
+        <p>
+          <span class="lang-es">Tu app se sirve desde servidores en todo el mundo para que cargue rápido.</span>
+          <span class="lang-en">Your app is served from servers worldwide so it loads fast everywhere.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Netflix hace lo mismo con las pelis</span>
+          <span class="lang-en">✦ Netflix does the same thing with movies</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🔀</div>
+        <h3>
+          <span class="lang-es">Preview por PR</span>
+          <span class="lang-en">Preview per PR</span>
+        </h3>
+        <p>
+          <span class="lang-es">Cada Pull Request genera una URL para ver los cambios antes de publicarlos.</span>
+          <span class="lang-en">Every Pull Request gets a unique URL to preview changes before going live.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Probás la web nueva antes de lanzarla</span>
+          <span class="lang-en">✦ Test the new version before launching it</span>
+        </div>
+      </div>
+    </div>
+    <div class="analogy-box">
+      <div class="alabel">
+        <span class="lang-es">Flujo completo</span>
+        <span class="lang-en" style="text-transform:none;letter-spacing:0;">Full workflow</span>
+      </div>
+      <p>
+        <span class="lang-es">Hacés un cambio → <code style="color:#86efac">git push</code> → Vercel construye y publica solo → tu web actualizada en 30 segundos.</span>
+        <span class="lang-en">Make a change → <code style="color:#86efac">git push</code> → Vercel builds and publishes automatically → your site updated in 30 seconds.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 8 · LOCALHOST             -->
+  <!-- ══════════════════════════ -->
+  <div class="slide" data-index="7">
+    <div class="tag" style="background:rgba(251,191,36,0.1);color:#fbbf24;">
+      <span class="lang-es">Desarrollo local</span>
+      <span class="lang-en">Local development</span>
+    </div>
+    <h2>🖥️ <span class="gradient-text-warm">Localhost</span></h2>
+    <p>
+      <span class="lang-es">Localhost es tu propia computadora actuando como servidor. Corrés la app <strong style="color:var(--text)">localmente</strong> para probarla antes de publicarla. Solo vos podés verla.</span>
+      <span class="lang-en">Localhost is your own computer acting as a server. You run the app <strong style="color:var(--text)">locally</strong> to test it before publishing. Only you can see it.</span>
+    </p>
+    <div class="grid-2" style="max-width:1350px;margin-top:20px;">
+      <div class="card">
+        <div class="icon">🔧</div>
+        <h3>
+          <span class="lang-es">localhost (tu compu)</span>
+          <span class="lang-en">localhost (your machine)</span>
+        </h3>
+        <p>
+          <span class="lang-es">Tu taller privado. Probás, rompés cosas, arreglás. Nadie más lo ve mientras trabajás.</span>
+          <span class="lang-en">Your private workshop. You test, break things, fix them. Nobody else sees it while you work.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como cocinar en casa antes de abrir el restaurant</span>
+          <span class="lang-en">✦ Like cooking at home before opening the restaurant</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🌐</div>
+        <h3>
+          <span class="lang-es">Vercel (internet)</span>
+          <span class="lang-en">Vercel (the internet)</span>
+        </h3>
+        <p>
+          <span class="lang-es">El restaurant abierto al público. Cuando está todo listo, publicás y el mundo puede entrar.</span>
+          <span class="lang-en">The restaurant open to the public. When everything is ready, you publish and the world can visit.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Lo que ve todo el mundo</span>
+          <span class="lang-en">✦ What everyone else sees</span>
+        </div>
+      </div>
+    </div>
+    <div class="analogy-box">
+      <div class="alabel">
+        <span class="lang-es">¿Qué es el puerto? (ej: localhost:3000)</span>
+        <span class="lang-en" style="text-transform:none;letter-spacing:0;">What is a port? (e.g. localhost:3000)</span>
+      </div>
+      <p>
+        <span class="lang-es">El número después de los dos puntos es el <strong style="color:var(--text)">puerto</strong>. Pensalo como la puerta de un edificio: el edificio es tu compu, la puerta 3000 es donde está corriendo tu app. Otra app podría estar en la puerta 8080.</span>
+        <span class="lang-en">The number after the colon is the <strong style="color:var(--text)">port</strong>. Think of it as a door in a building: the building is your computer, door 3000 is where your app is running. Another app might be at door 8080.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 9 · API                  -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-api" data-index="8">
+    <div class="tag" style="background:rgba(6,182,212,0.1);color:#22d3ee;">Backend</div>
+    <h2>⚡ <span class="lang-es">¿Qué es una <span style="color:#22d3ee;">API</span>?</span><span class="lang-en" style="font-size:0.6em;margin-top:4px;">What is an <span style="color:#22d3ee;">API</span>?</span></h2>
+    <p>
+      <span class="lang-es">API = <strong style="color:var(--text)">Application Programming Interface</strong>. Es el puente que permite que dos sistemas se comuniquen sin conocerse por dentro.</span>
+      <span class="lang-en">API = <strong style="color:var(--text)">Application Programming Interface</strong>. The bridge that lets two systems talk to each other without knowing each other's internals.</span>
+    </p>
+    <div style="margin-top:20px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;max-width:1400px;width:100%;">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;">
+        <div style="text-align:center;padding:14px 18px;background:var(--surface2);border-radius:12px;">
+          <div style="font-size:26px;">📱</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;"><span class="lang-es">Tu App<br>(Cliente)</span><span class="lang-en">Your App<br>(Client)</span></div>
+        </div>
+        <div style="font-size:18px;color:#22d3ee;">⟷</div>
+        <div style="text-align:center;padding:14px 18px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);border-radius:12px;">
+          <div style="font-size:26px;">⚡</div>
+          <div style="font-size:12px;color:#22d3ee;margin-top:6px;">API<br>(<span class="lang-es">Intermediario</span><span class="lang-en">Middleman</span>)</div>
+        </div>
+        <div style="font-size:18px;color:#22d3ee;">⟷</div>
+        <div style="text-align:center;padding:14px 18px;background:var(--surface2);border-radius:12px;">
+          <div style="font-size:26px;">🗄️</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;"><span class="lang-es">Servicio externo<br>(Servidor)</span><span class="lang-en">External service<br>(Server)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="analogy-box">
+      <div class="alabel">
+        <span class="lang-es">Analogía del restaurante</span>
+        <span class="lang-en" style="text-transform:none;letter-spacing:0;">The restaurant analogy</span>
+      </div>
+      <p>
+        <span class="lang-es">Vos (la app) le pedís al <strong style="color:var(--text)">mozo</strong> (la API) lo que querés. El mozo va a la <strong style="color:var(--text)">cocina</strong> (el servidor) y trae lo que pediste. Nunca entrás a la cocina, no sabés cómo funciona. Solo hablás con el mozo.</span>
+        <span class="lang-en">You (the app) tell the <strong style="color:var(--text)">waiter</strong> (the API) what you want. The waiter goes to the <strong style="color:var(--text)">kitchen</strong> (the server) and brings back what you ordered. You never enter the kitchen or know how it works. You just talk to the waiter.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 10 · API REST             -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-api" data-index="9">
+    <div class="tag" style="background:rgba(6,182,212,0.1);color:#22d3ee;">Backend</div>
+    <h2>API <span style="color:#22d3ee;">REST</span> — <span class="lang-es">Los 4 verbos</span><span class="lang-en" style="font-size:0.7em;"> The 4 verbs</span></h2>
+    <p>
+      <span class="lang-es">REST es la arquitectura más usada para APIs web. Cada acción tiene un verbo HTTP. Son como los cuatro pedidos básicos que podés hacerle al mozo:</span>
+      <span class="lang-en">REST is the most widely used architecture for web APIs. Each action has an HTTP verb — like four basic requests you can make to the waiter:</span>
+    </p>
+    <div class="grid-2" style="margin-top:16px;max-width:1350px;">
+      <div class="card" style="border-color:rgba(16,185,129,0.3);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="background:rgba(16,185,129,0.2);color:#34d399;padding:3px 9px;border-radius:6px;font-size:12px;font-weight:700;font-family:monospace;">GET</span>
+          <h3 style="margin:0;"><span class="lang-es">Traeme información</span><span class="lang-en">Fetch information</span></h3>
+        </div>
+        <p><code style="color:#a5f3fc;font-size:12px;">GET /productos</code> <span class="lang-es">→ devuelve todos los productos.</span><span class="lang-en">→ returns all products.</span></p>
+        <div class="example-pill">
+          <span class="lang-es">✦ "Mozo, ¿qué tienen en el menú?"</span>
+          <span class="lang-en">✦ "Waiter, what's on the menu?"</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.3);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="background:rgba(6,182,212,0.2);color:#22d3ee;padding:3px 9px;border-radius:6px;font-size:12px;font-weight:700;font-family:monospace;">POST</span>
+          <h3 style="margin:0;"><span class="lang-es">Creá algo nuevo</span><span class="lang-en">Create something new</span></h3>
+        </div>
+        <p><code style="color:#a5f3fc;font-size:12px;">POST /pedidos</code> <span class="lang-es">→ crea un pedido nuevo.</span><span class="lang-en">→ creates a new order.</span></p>
+        <div class="example-pill">
+          <span class="lang-es">✦ "Mozo, quiero pedir una pizza"</span>
+          <span class="lang-en">✦ "Waiter, I'd like to order a pizza"</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(251,191,36,0.3);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="background:rgba(251,191,36,0.15);color:#fbbf24;padding:3px 9px;border-radius:6px;font-size:12px;font-weight:700;font-family:monospace;">PUT</span>
+          <h3 style="margin:0;"><span class="lang-es">Cambiá algo existente</span><span class="lang-en">Update something existing</span></h3>
+        </div>
+        <p><code style="color:#a5f3fc;font-size:12px;">PUT /pedidos/5</code> <span class="lang-es">→ edita el pedido 5.</span><span class="lang-en">→ edits order 5.</span></p>
+        <div class="example-pill">
+          <span class="lang-es">✦ "Mozo, en vez de pizza quiero pasta"</span>
+          <span class="lang-en">✦ "Waiter, change my pizza to pasta"</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(239,68,68,0.3);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="background:rgba(239,68,68,0.15);color:#f87171;padding:3px 9px;border-radius:6px;font-size:12px;font-weight:700;font-family:monospace;">DELETE</span>
+          <h3 style="margin:0;"><span class="lang-es">Eliminá algo</span><span class="lang-en">Remove something</span></h3>
+        </div>
+        <p><code style="color:#a5f3fc;font-size:12px;">DELETE /pedidos/5</code> <span class="lang-es">→ cancela el pedido 5.</span><span class="lang-en">→ cancels order 5.</span></p>
+        <div class="example-pill">
+          <span class="lang-es">✦ "Mozo, cancelá mi pedido"</span>
+          <span class="lang-en">✦ "Waiter, cancel my order"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 11 · ANTHROPIC VS PRO     -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-anthropic" data-index="10">
+    <div class="tag" style="background:rgba(251,191,36,0.1);color:#fbbf24;">
+      <span class="lang-es">Suscripciones</span>
+      <span class="lang-en">Subscriptions</span>
+    </div>
+    <h2>Claude Pro <span style="color:var(--muted);font-weight:400;">vs</span> <span class="lang-es">API de Anthropic</span><span class="lang-en" style="font-size:0.7em;"> Anthropic API</span></h2>
+    <p>
+      <span class="lang-es">Dos formas de acceder a Claude, con propósitos muy diferentes. Esta es la confusión más común:</span>
+      <span class="lang-en">Two ways to access Claude, with very different purposes. This is the most common point of confusion:</span>
+    </p>
+    <div class="compare">
+      <div class="compare-card pro">
+        <h3>🟣 Claude Pro</h3>
+        <div class="price gradient-text">$20<span style="font-size:15px;font-weight:400;color:var(--muted);">/mes</span></div>
+        <ul style="max-width:100%;">
+          <li><span class="lang-es">Entrás a claude.ai y chateás</span><span class="lang-en">You go to claude.ai and chat</span></li>
+          <li><span class="lang-es">Uso personal: escribir, analizar, programar</span><span class="lang-en">Personal use: writing, analysis, coding</span></li>
+          <li><span class="lang-es">Acceso a Claude Sonnet y Opus</span><span class="lang-en">Access to Claude Sonnet and Opus</span></li>
+          <li style="color:#f87171;">❌ <span class="lang-es">Tu app no puede usar Claude</span><span class="lang-en">Your app cannot use Claude</span></li>
+        </ul>
+        <div class="example-pill" style="margin-top:14px;">
+          <span class="lang-es">✦ Como Netflix: vos lo ves, pero no lo ponés en tu web</span>
+          <span class="lang-en">✦ Like Netflix: you watch it, but can't embed it in your site</span>
+        </div>
+      </div>
+      <div class="compare-card api">
+        <h3>🔵 <span class="lang-es">API de Anthropic</span><span class="lang-en">Anthropic API</span></h3>
+        <div class="price" style="background:linear-gradient(135deg,#22d3ee,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pay per use</div>
+        <ul style="max-width:100%;">
+          <li><span class="lang-es">Recibís una API Key (llave secreta)</span><span class="lang-en">You receive an API Key (secret key)</span></li>
+          <li><span class="lang-es">Tu app usa esa llave para hablar con Claude</span><span class="lang-en">Your app uses that key to talk to Claude</span></li>
+          <li><span class="lang-es">Tus usuarios acceden a Claude sin saberlo</span><span class="lang-en">Your users interact with Claude without knowing it</span></li>
+          <li style="color:#34d399;">✅ <span class="lang-es">Claude dentro de tu propia app</span><span class="lang-en">Claude inside your own app</span></li>
+        </ul>
+        <div class="example-pill" style="margin-top:14px;">
+          <span class="lang-es">✦ Como contratar un chef para tu restaurant</span>
+          <span class="lang-en">✦ Like hiring a chef for your restaurant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 12 · MCP                  -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-api" data-index="11">
+    <div class="tag" style="background:rgba(6,182,212,0.1);color:#22d3ee;">
+      <span class="lang-es">Próximo nivel</span>
+      <span class="lang-en">Next level</span>
+    </div>
+    <h2>🔌 MCP — <span class="lang-es">Dale <span style="color:#22d3ee;">manos</span> a Claude</span><span class="lang-en" style="font-size:0.65em;"> Give Claude <span style="color:#22d3ee;">hands</span></span></h2>
+    <p>
+      <span class="lang-es">MCP = <strong style="color:var(--text)">Model Context Protocol</strong>. Es un estándar que permite a Claude conectarse con herramientas externas y actuar en el mundo real, no solo responder texto.</span>
+      <span class="lang-en">MCP = <strong style="color:var(--text)">Model Context Protocol</strong>. A standard that lets Claude connect with external tools and act in the real world — not just reply with text.</span>
+    </p>
+    <div class="grid-2" style="margin-top:18px;max-width:1400px;">
+      <div class="card">
+        <div class="icon">💬</div>
+        <h3>
+          <span class="lang-es">Claude sin MCP</span>
+          <span class="lang-en">Claude without MCP</span>
+        </h3>
+        <p>
+          <span class="lang-es">Solo puede leer lo que le pegás en el chat y responderte. No puede hacer nada por su cuenta.</span>
+          <span class="lang-en">Can only read what you paste into the chat and reply. Can't do anything on its own.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como un asesor que solo puede dar consejos</span>
+          <span class="lang-en">✦ Like an advisor who can only give advice</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.35);">
+        <div class="icon">🤖</div>
+        <h3>
+          <span class="lang-es">Claude con MCP</span>
+          <span class="lang-en">Claude with MCP</span>
+        </h3>
+        <p>
+          <span class="lang-es">Puede leer archivos de tu compu, consultar tu base de datos, hacer commits en GitHub, buscar en internet, y más.</span>
+          <span class="lang-en">Can read files on your computer, query your database, make GitHub commits, search the web, and more.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Como un asistente que también ejecuta las tareas</span>
+          <span class="lang-en">✦ Like an assistant who actually gets things done</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:14px;max-width:1400px;width:100%;">
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">🐙</div>
+        <h3 style="font-size:13px;">GitHub</h3>
+        <p style="font-size:11px;"><span class="lang-es">Crea ramas, hace commits y abre Pull Requests.</span><span class="lang-en">Creates branches, commits, and opens Pull Requests.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">🗄️</div>
+        <h3 style="font-size:13px;"><span class="lang-es">Base de datos</span><span class="lang-en">Database</span></h3>
+        <p style="font-size:11px;"><span class="lang-es">Consulta tu DB en lenguaje natural y trae resultados.</span><span class="lang-en">Queries your DB in plain language and returns results.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">🌐</div>
+        <h3 style="font-size:13px;">Browser</h3>
+        <p style="font-size:11px;"><span class="lang-es">Navega sitios, extrae info y rellena formularios.</span><span class="lang-en">Browses sites, extracts info, and fills out forms.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">💬</div>
+        <h3 style="font-size:13px;">Slack</h3>
+        <p style="font-size:11px;"><span class="lang-es">Lee canales, responde mensajes y notifica al equipo.</span><span class="lang-en">Reads channels, replies to messages, and notifies the team.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">📋</div>
+        <h3 style="font-size:13px;">Notion</h3>
+        <p style="font-size:11px;"><span class="lang-es">Crea y actualiza páginas, bases de datos y tareas.</span><span class="lang-en">Creates and updates pages, databases, and tasks.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">📁</div>
+        <h3 style="font-size:13px;"><span class="lang-es">Archivos</span><span class="lang-en">Files</span></h3>
+        <p style="font-size:11px;"><span class="lang-es">Lee, escribe y organiza archivos de tu computadora.</span><span class="lang-en">Reads, writes, and organizes files on your computer.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">🎨</div>
+        <h3 style="font-size:13px;">Figma</h3>
+        <p style="font-size:11px;"><span class="lang-es">Inspecciona diseños y genera código desde los componentes.</span><span class="lang-en">Inspects designs and generates code from components.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">📧</div>
+        <h3 style="font-size:13px;">Gmail</h3>
+        <p style="font-size:11px;"><span class="lang-es">Lee, redacta y envía correos según tus instrucciones.</span><span class="lang-en">Reads, drafts, and sends emails per your instructions.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">📅</div>
+        <h3 style="font-size:13px;">Google Calendar</h3>
+        <p style="font-size:11px;"><span class="lang-es">Crea reuniones, revisa disponibilidad y agenda citas.</span><span class="lang-en">Creates meetings, checks availability, and schedules appointments.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">🔍</div>
+        <h3 style="font-size:13px;"><span class="lang-es">Búsqueda web</span><span class="lang-en">Web search</span></h3>
+        <p style="font-size:11px;"><span class="lang-es">Busca info en internet en tiempo real y la resume.</span><span class="lang-en">Searches the web in real time and summarizes results.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">💳</div>
+        <h3 style="font-size:13px;">Stripe</h3>
+        <p style="font-size:11px;"><span class="lang-es">Consulta pagos, clientes y suscripciones.</span><span class="lang-en">Queries payments, customers, and subscriptions.</span></p>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);padding:14px;">
+        <div class="icon" style="font-size:20px;">🏗️</div>
+        <h3 style="font-size:13px;">Sanity CMS</h3>
+        <p style="font-size:11px;"><span class="lang-es">Crea, edita y publica contenido directamente en tu CMS.</span><span class="lang-en">Creates, edits, and publishes content directly in your CMS.</span></p>
+      </div>
+    </div>
+    <div class="analogy-box" style="max-width:1400px;">
+      <div class="alabel">
+        <span class="lang-es">Analogía</span>
+        <span class="lang-en" style="text-transform:none;letter-spacing:0;">Analogy</span>
+      </div>
+      <p>
+        <span class="lang-es">Sin MCP Claude es un cerebro sin cuerpo: muy inteligente pero encerrado. Con MCP le das brazos y piernas para que actúe en el mundo real.</span>
+        <span class="lang-en">Without MCP, Claude is a brain without a body — incredibly smart but locked in a box. With MCP, you give it arms and legs to act in the real world.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 13 · AGENTES              -->
+  <!-- ══════════════════════════ -->
+  <div class="slide" data-index="12" style="padding:32px 60px;">
+    <div class="tag" style="background:rgba(168,85,247,0.1);color:#a855f7;">
+      <span class="lang-es">Automatización avanzada</span><span class="lang-en">Advanced automation</span>
+    </div>
+    <h2>🤖 <span class="gradient-text"><span class="lang-es">Agentes</span><span class="lang-en">Agents</span></span></h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-top:14px;max-width:1400px;width:100%;">
+
+      <div style="background:var(--surface);border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:14px;text-align:left;">
+        <h3 style="font-size:13px;color:#a855f7;margin-bottom:8px;">📋 CLAUDE.md</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">
+          <span class="lang-es">El <strong style="color:var(--text);">briefing</strong> del agente. No obligatorio, pero sin él no sabe nada de tu proyecto.</span>
+          <span class="lang-en">The agent's <strong style="color:var(--text);">briefing doc</strong>. Optional, but without it the agent has no project context.</span>
+        </p>
+        <div style="font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:3px;">
+          <span>✦ <span class="lang-es">Reglas y convenciones</span><span class="lang-en">Rules & conventions</span></span>
+          <span>✦ <span class="lang-es">Stack tecnológico</span><span class="lang-en">Tech stack</span></span>
+          <span>✦ <span class="lang-es">Qué no debe tocar</span><span class="lang-en">What not to touch</span></span>
+          <span style="color:#a855f7;margin-top:2px;">→ <code style="background:rgba(255,255,255,0.08);padding:1px 4px;border-radius:3px;">/init</code></span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:14px;text-align:left;">
+        <h3 style="font-size:13px;color:#a855f7;margin-bottom:8px;">⚡ <span class="lang-es">Varios a la vez</span><span class="lang-en">Multiple at once</span></h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">
+          <span class="lang-es">Ante una tarea compleja, Claude lanza <strong style="color:var(--text);">subagentes en paralelo</strong> y los coordina.</span>
+          <span class="lang-en">For complex tasks, Claude spawns <strong style="color:var(--text);">sub-agents in parallel</strong> and coordinates them.</span>
+        </p>
+        <div style="font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:3px;">
+          <span>✦ <span class="lang-es">Agente A → frontend</span><span class="lang-en">Agent A → frontend</span></span>
+          <span>✦ <span class="lang-es">Agente B → backend</span><span class="lang-en">Agent B → backend</span></span>
+          <span>✦ <span class="lang-es">Corren al mismo tiempo</span><span class="lang-en">Run simultaneously</span></span>
+          <span style="color:#a855f7;margin-top:2px;">→ <span class="lang-es">Automático</span><span class="lang-en">Automatic</span></span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:14px;text-align:left;">
+        <h3 style="font-size:13px;color:#a855f7;margin-bottom:8px;">⏰ <span class="lang-es">Que corra solo</span><span class="lang-en">Unattended runs</span></h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">
+          <span class="lang-es">Necesitás un <strong style="color:var(--text);">disparador externo</strong>.</span>
+          <span class="lang-en">You need an <strong style="color:var(--text);">external trigger</strong>.</span>
+        </p>
+        <div style="font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:3px;">
+          <span>✦ <strong style="color:var(--text);">Hooks</strong> — <span class="lang-es">en git commit / guardar</span><span class="lang-en">on commit / file save</span></span>
+          <span>✦ <strong style="color:var(--text);">GitHub Actions</strong> — <span class="lang-es">en cada PR</span><span class="lang-en">on every PR</span></span>
+          <span>✦ <strong style="color:var(--text);">Cron job</strong> — <span class="lang-es">programado</span><span class="lang-en">scheduled</span></span>
+          <span style="font-size:10px;background:rgba(255,255,255,0.05);padding:3px 5px;border-radius:5px;margin-top:2px;font-family:monospace;">claude --print "task"</span>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid rgba(168,85,247,0.3);border-radius:14px;padding:14px;text-align:left;">
+        <h3 style="font-size:13px;color:#a855f7;margin-bottom:8px;">🧪 <span class="lang-es">Ejemplos</span><span class="lang-en">Examples</span></h3>
+        <div style="font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:5px;">
+          <span>→ <span class="lang-es">"Encontrá bugs y abrí un PR"</span><span class="lang-en">"Find bugs and open a PR"</span></span>
+          <span>→ <span class="lang-es">"Migrá la DB, corré tests y desplegá"</span><span class="lang-en">"Migrate DB, run tests, deploy"</span></span>
+          <span>→ <span class="lang-es">"Leé los tickets de Notion y codealos"</span><span class="lang-en">"Read Notion tickets and code them"</span></span>
+          <span>→ <span class="lang-es">"Documentá todos los endpoints"</span><span class="lang-en">"Document all API endpoints"</span></span>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding:12px 18px;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);border-radius:12px;max-width:1400px;width:100%;">
+      <span style="font-size:11px;color:var(--muted);font-weight:600;color:#a855f7;">FLUJO /</span>
+      <span style="background:rgba(168,85,247,0.15);border-radius:6px;padding:3px 8px;font-size:11px;"><span class="lang-es">Recibe objetivo</span><span class="lang-en">Receives goal</span></span>
+      <span style="color:#a855f7;font-size:13px;">→</span>
+      <span style="background:rgba(168,85,247,0.15);border-radius:6px;padding:3px 8px;font-size:11px;"><span class="lang-es">Planifica</span><span class="lang-en">Plans</span></span>
+      <span style="color:#a855f7;font-size:13px;">→</span>
+      <span style="background:rgba(168,85,247,0.15);border-radius:6px;padding:3px 8px;font-size:11px;"><span class="lang-es">Usa herramientas</span><span class="lang-en">Uses tools</span></span>
+      <span style="color:#a855f7;font-size:13px;">→</span>
+      <span style="background:rgba(168,85,247,0.15);border-radius:6px;padding:3px 8px;font-size:11px;"><span class="lang-es">Evalúa</span><span class="lang-en">Evaluates</span></span>
+      <span style="color:#a855f7;font-size:13px;">→</span>
+      <span style="background:rgba(16,185,129,0.15);border-radius:6px;padding:3px 8px;font-size:11px;color:#34d399;"><span class="lang-es">Entrega ✓</span><span class="lang-en">Delivers ✓</span></span>
+      <span style="margin-left:auto;font-size:11px;color:var(--muted);font-style:italic;"><span class="lang-es">Chat: responde. Agente: completa la misión.</span><span class="lang-en">Chat: replies. Agent: completes the mission.</span></span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 14 · COMANDOS CLAUDE CODE -->
+  <!-- ══════════════════════════ -->
+  <div class="slide" data-index="13" style="padding:32px 60px;">
+    <div class="tag" style="background:rgba(16,185,129,0.1);color:#34d399;">Claude Code CLI</div>
+    <h2>⌨️ <span class="lang-es">Comandos de <span style="color:#34d399;">Claude Code</span></span><span class="lang-en" style="font-size:0.65em;"><span style="color:#34d399;">Claude Code</span> commands</span></h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;max-width:1400px;width:100%;">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:left;">
+        <h3 style="font-size:13px;color:#34d399;margin-bottom:8px;">🗂️ <span class="lang-es">Contexto &amp; Conversación</span><span class="lang-en">Context &amp; Conversation</span></h3>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(16,185,129,0.12);color:#34d399;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/context</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Cuánto contexto estás usando + sugerencias.</span><span class="lang-en">How much context you're using + tips.</span></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(16,185,129,0.12);color:#34d399;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/compact</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Comprime la conversación y libera tokens.</span><span class="lang-en">Compresses conversation and frees up tokens.</span></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(16,185,129,0.12);color:#34d399;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/clear</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Borra el historial y arranca de cero.</span><span class="lang-en">Clears history and starts fresh.</span></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(16,185,129,0.12);color:#34d399;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/btw</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Pregunta rápida sin quedar en el historial.</span><span class="lang-en">Quick question that won't enter the history.</span></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(16,185,129,0.12);color:#34d399;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/rewind</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Vuelve a un punto anterior de la conversación.</span><span class="lang-en">Rolls back to a previous point in the conversation.</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:left;">
+        <h3 style="font-size:13px;color:#a855f7;margin-bottom:8px;">🛠️ <span class="lang-es">Proyecto &amp; Memoria</span><span class="lang-en">Project &amp; Memory</span></h3>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(168,85,247,0.12);color:#a855f7;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/init</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Crea el <strong style="color:var(--text);">CLAUDE.md</strong> con las reglas del proyecto.</span><span class="lang-en">Creates <strong style="color:var(--text);">CLAUDE.md</strong> with project rules and context.</span></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(168,85,247,0.12);color:#a855f7;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/memory</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Edita la memoria persistente entre sesiones.</span><span class="lang-en">Edits persistent memory across sessions.</span></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(168,85,247,0.12);color:#a855f7;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/cost</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Tokens usados y costo de la sesión.</span><span class="lang-en">Tokens used and session cost.</span></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(168,85,247,0.12);color:#a855f7;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/mcp</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Gestiona conexiones MCP: ver, activar, desactivar.</span><span class="lang-en">Manage MCP connections: view, enable, disable.</span></span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:baseline;">
+            <code style="background:rgba(168,85,247,0.12);color:#a855f7;padding:1px 7px;border-radius:5px;font-size:11px;white-space:nowrap;">/model</code>
+            <span style="font-size:11px;color:var(--muted);"><span class="lang-es">Cambia el modelo en vivo: Opus, Sonnet o Haiku.</span><span class="lang-en">Switch model on the fly: Opus, Sonnet, or Haiku.</span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:14px;padding:12px 18px;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.15);border-left:3px solid #34d399;border-radius:0 12px 12px 0;max-width:1400px;width:100%;text-align:left;">
+      <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#34d399;"><span class="lang-es">¿Más contexto = más tokens?</span><span class="lang-en">More context = more tokens?</span></span>
+      <p style="font-size:12px;margin-top:4px;">
+        <span class="lang-es">Sí. Cada mensaje envía todo el historial. Usá <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">/compact</code> para comprimir o <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">/clear</code> para bajar el costo.</span>
+        <span class="lang-en">Yes. Every message sends the full history. Use <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">/compact</code> to compress or <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">/clear</code> to cut costs.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 16 · STACK COMPLETO       -->
+  <!-- ══════════════════════════ -->
+  <div class="slide" data-index="14">
+    <div class="tag" style="background:rgba(124,58,237,0.15);color:#a855f7;">
+      <span class="lang-es">Stack completo</span>
+      <span class="lang-en">Full stack</span>
+    </div>
+    <h2>
+      <span class="lang-es">Todo junto: el <span class="gradient-text">stack del Vibecoder</span></span>
+      <span class="lang-en" style="font-size:0.6em;margin-top:4px;">All together: the <span class="gradient-text">Vibecoder's stack</span></span>
+    </h2>
+    <div class="grid-3" style="margin-top:20px;">
+      <div class="card" style="border-color:rgba(168,85,247,0.3);">
+        <div class="icon">🤖</div>
+        <h3>Claude / IA</h3>
+        <p>
+          <span class="lang-es">Genera el código, resuelve bugs, escribe tests. Tu par de programación.</span>
+          <span class="lang-en">Generates code, fixes bugs, writes tests. Your programming pair.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ "Hacé un formulario de contacto"</span>
+          <span class="lang-en">✦ "Build a contact form"</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(16,185,129,0.3);">
+        <div class="icon">🐙</div>
+        <h3>GitHub</h3>
+        <p>
+          <span class="lang-es">Guarda el código, lleva el historial, permite colaborar en equipo.</span>
+          <span class="lang-en">Stores the code, tracks history, enables team collaboration.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ El Google Drive de tu proyecto</span>
+          <span class="lang-en">✦ The Google Drive of your project</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(255,255,255,0.15);">
+        <div class="icon">▲</div>
+        <h3>Vercel</h3>
+        <p>
+          <span class="lang-es">Publica tu app en internet con cada push. Sin servidores.</span>
+          <span class="lang-en">Publishes your app online with every push. No servers needed.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Tu web live en 30 segundos</span>
+          <span class="lang-en">✦ Your site live in 30 seconds</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(251,191,36,0.3);">
+        <div class="icon">🔧</div>
+        <h3>Localhost</h3>
+        <p>
+          <span class="lang-es">Desarrollás en tu máquina antes de publicar. Tu taller privado.</span>
+          <span class="lang-en">You develop on your machine before publishing. Your private workshop.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Probás antes de lanzar</span>
+          <span class="lang-en">✦ Test before you launch</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.3);">
+        <div class="icon">⚡</div>
+        <h3>API REST</h3>
+        <p>
+          <span class="lang-es">Tu app habla con servicios externos: pagos, IA, mapas, email.</span>
+          <span class="lang-en">Your app talks to external services: payments, AI, maps, email.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ El mozo que conecta todo</span>
+          <span class="lang-en">✦ The waiter that connects everything</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(239,68,68,0.2);">
+        <div class="icon">🔑</div>
+        <h3>API Key</h3>
+        <p>
+          <span class="lang-es">Llave secreta para que tu app use servicios de pago. Nunca la compartas.</span>
+          <span class="lang-en">Secret key for your app to access paid services. Never share it.</span>
+        </p>
+        <div class="example-pill">
+          <span class="lang-es">✦ Tu contraseña de acceso</span>
+          <span class="lang-en">✦ Your access password</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 17 · EJERCICIO — LA API   -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-api" data-index="15">
+    <div class="tag" style="background:rgba(6,182,212,0.1);color:#22d3ee;">
+      <span class="lang-es">Manos a la obra 🛠️</span>
+      <span class="lang-en">Hands on 🛠️</span>
+    </div>
+    <h2>
+      <span class="lang-es">El ejercicio: web personal<br><span style="color:#22d3ee;">localhost → GitHub → Vercel</span></span>
+      <span class="lang-en" style="font-size:0.6em;margin-top:4px;">The exercise: personal website<br><span style="color:#22d3ee;">localhost → GitHub → Vercel</span></span>
+    </h2>
+    <p>
+      <span class="lang-es">Van a construir una web con Vite, verla correr en su propia máquina, subirla a GitHub y dejarla <strong style="color:var(--text)">online para siempre</strong> con Vercel.</span>
+      <span class="lang-en">You'll build a site with Vite, run it on your machine, push it to GitHub, and get it <strong style="color:var(--text)">online forever</strong> with Vercel.</span>
+    </p>
+
+    <div class="grid-2" style="margin-top:20px;max-width:1400px;">
+      <div class="card" style="border-color:rgba(6,182,212,0.4);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <span style="font-size:32px;">⚡</span>
+          <div>
+            <h3 style="margin:0;">Vite + PokeAPI</h3>
+            <span style="font-size:11px;color:#22d3ee;font-family:monospace;">vite.dev · pokeapi.co</span>
+          </div>
+        </div>
+        <p style="font-size:13px;">
+          <span class="lang-es">Vite es el bundler moderno más usado — arranca un servidor local en segundos con <code style="color:#a5f3fc;">npm run dev</code>. La PokeAPI es pública, gratuita y sin API Key.</span>
+          <span class="lang-en">Vite is the most popular modern bundler — spins up a local server in seconds with <code style="color:#a5f3fc;">npm run dev</code>. PokeAPI is public, free, no key needed.</span>
+        </p>
+        <div class="example-pill" style="margin-top:10px;">
+          <span class="lang-es">✦ El flujo real de cualquier proyecto moderno</span>
+          <span class="lang-en">✦ The real workflow of any modern project</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🎯</div>
+        <h3>
+          <span class="lang-es">¿Qué van a construir?</span>
+          <span class="lang-en">What will you build?</span>
+        </h3>
+        <p style="font-size:13px;">
+          <span class="lang-es">Una web personal con su nombre, profesión y un botón <strong style="color:var(--text)">"Sorprendeme"</strong> que consulta la PokeAPI y muestra un Pokémon aleatorio con imagen, nombre y tipo.</span>
+          <span class="lang-en">A personal site with your name, profession, and a <strong style="color:var(--text)">"Surprise me"</strong> button that calls the PokeAPI and shows a random Pokémon with image, name, and type.</span>
+        </p>
+        <div class="example-pill" style="margin-top:10px;">
+          <span class="lang-es">✦ Cada click = un fetch() a una API real</span>
+          <span class="lang-en">✦ Every click = a fetch() to a real API</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px 20px;max-width:1400px;width:100%;text-align:left;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#22d3ee;margin-bottom:10px;">
+        <span class="lang-es">El prompt que van a usar en Claude Code</span>
+        <span class="lang-en">The prompt you'll use in Claude Code</span>
+      </div>
+      <p style="font-size:13px;color:#fbbf24;font-family:monospace;line-height:1.7;">"Creame un proyecto Vite con vanilla JS. Una web personal con diseño moderno y oscuro. Mi nombre es [nombre], soy [profesión]. Que tenga una sección de presentación y una sección que use la PokeAPI (https://pokeapi.co/api/v2/pokemon/{numero}) para mostrar un Pokémon aleatorio con imagen, nombre y tipo cuando aprieto un botón 'Sorprendeme'."</p>
+      <p class="lang-en" style="font-size:12px;margin-top:8px;font-family:monospace;">"Create a Vite project with vanilla JS. A personal website with a modern dark design. My name is [name], I'm a [profession]. Include a personal intro section and a section that uses the PokeAPI (https://pokeapi.co/api/v2/pokemon/{number}) to show a random Pokémon with image, name and type when I click a 'Surprise me' button."</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 18 · EJERCICIO — PASOS    -->
+  <!-- ══════════════════════════ -->
+  <div class="slide" data-index="16">
+    <div class="tag" style="background:rgba(16,185,129,0.15);color:#34d399;">
+      <span class="lang-es">Manos a la obra 🛠️</span>
+      <span class="lang-en">Hands on 🛠️</span>
+    </div>
+    <h2>
+      <span class="lang-es">5 pasos para tener tu web<br><span style="color:#34d399;">live en internet hoy</span></span>
+      <span class="lang-en" style="font-size:0.6em;margin-top:4px;">5 steps to get your site<br><span style="color:#34d399;">live on the internet today</span></span>
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;width:100%;max-width:1400px;margin-top:18px;">
+
+      <div class="card" style="border-color:rgba(168,85,247,0.4);position:relative;padding-top:28px;">
+        <div style="position:absolute;top:-12px;left:18px;background:#a855f7;color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;">
+          <span class="lang-es">PASO 1</span><span class="lang-en">STEP 1</span>
+        </div>
+        <div class="icon">🤖</div>
+        <h3>
+          <span class="lang-es">Claude genera el proyecto</span>
+          <span class="lang-en">Claude builds the project</span>
+        </h3>
+        <p style="font-size:12px;">
+          <span class="lang-es">Abrí una carpeta nueva en la terminal, lanzá Claude Code y pegá el prompt con tu nombre y profesión.</span>
+          <span class="lang-en">Open a new folder in the terminal, launch Claude Code and paste the prompt with your name and profession.</span>
+        </p>
+        <div class="example-pill" style="margin-top:8px;font-family:monospace;font-size:11px;">mkdir mi-web &amp;&amp; cd mi-web<br>claude</div>
+      </div>
+
+      <div class="card" style="border-color:rgba(6,182,212,0.4);position:relative;padding-top:28px;">
+        <div style="position:absolute;top:-12px;left:18px;background:#06b6d4;color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;">
+          <span class="lang-es">PASO 2</span><span class="lang-en">STEP 2</span>
+        </div>
+        <div class="icon">⚡</div>
+        <h3>
+          <span class="lang-es">Correrlo en localhost</span>
+          <span class="lang-en">Run on localhost</span>
+        </h3>
+        <p style="font-size:12px;">
+          <span class="lang-es">Instalá las dependencias y arrancá el servidor de desarrollo. Se abre solo en el navegador.</span>
+          <span class="lang-en">Install dependencies and start the dev server. It opens automatically in your browser.</span>
+        </p>
+        <div class="example-pill" style="margin-top:8px;font-family:monospace;font-size:11px;">npm install<br>npm run dev<br><span style="color:#34d399;">→ localhost:5173</span></div>
+      </div>
+
+      <div class="card" style="border-color:rgba(251,191,36,0.4);position:relative;padding-top:28px;">
+        <div style="position:absolute;top:-12px;left:18px;background:#f59e0b;color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;">
+          <span class="lang-es">PASO 3</span><span class="lang-en">STEP 3</span>
+        </div>
+        <div class="icon">📦</div>
+        <h3>
+          <span class="lang-es">Commit en Git</span>
+          <span class="lang-en">Commit to Git</span>
+        </h3>
+        <p style="font-size:12px;">
+          <span class="lang-es">Guardá el estado del proyecto con Git. Cada commit es un punto al que siempre podés volver.</span>
+          <span class="lang-en">Save the project state with Git. Each commit is a checkpoint you can always go back to.</span>
+        </p>
+        <div class="example-pill" style="margin-top:8px;font-family:monospace;font-size:11px;">git init<br>git add .<br>git commit -m "primera version"</div>
+      </div>
+
+      <div class="card" style="border-color:rgba(16,185,129,0.4);position:relative;padding-top:28px;">
+        <div style="position:absolute;top:-12px;left:18px;background:#10b981;color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;">
+          <span class="lang-es">PASO 4</span><span class="lang-en">STEP 4</span>
+        </div>
+        <div class="icon">🐙</div>
+        <h3>
+          <span class="lang-es">Push a GitHub</span>
+          <span class="lang-en">Push to GitHub</span>
+        </h3>
+        <p style="font-size:12px;">
+          <span class="lang-es">Creá un repo nuevo en github.com y subí tu código. Desde ese momento GitHub es la fuente de verdad.</span>
+          <span class="lang-en">Create a new repo on github.com and push your code. From now on GitHub is the source of truth.</span>
+        </p>
+        <div class="example-pill" style="margin-top:8px;font-family:monospace;font-size:11px;">git remote add origin &lt;url&gt;<br>git push -u origin main</div>
+      </div>
+
+      <div class="card" style="border-color:rgba(255,255,255,0.2);position:relative;padding-top:28px;">
+        <div style="position:absolute;top:-12px;left:18px;background:#475569;color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;">
+          <span class="lang-es">PASO 5</span><span class="lang-en">STEP 5</span>
+        </div>
+        <div class="icon">▲</div>
+        <h3>
+          <span class="lang-es">Deploy con Vercel</span>
+          <span class="lang-en">Deploy with Vercel</span>
+        </h3>
+        <p style="font-size:12px;">
+          <span class="lang-es">Entrá a vercel.com, conectá tu repo de GitHub y hace click en Deploy. Vercel detecta Vite solo.</span>
+          <span class="lang-en">Go to vercel.com, connect your GitHub repo and click Deploy. Vercel auto-detects Vite.</span>
+        </p>
+        <div class="example-pill" style="margin-top:8px;">
+          <span class="lang-es">✦ URL pública en 30 segundos 🚀</span>
+          <span class="lang-en">✦ Public URL in 30 seconds 🚀</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="analogy-box" style="max-width:1400px;margin-top:14px;border-left-color:#34d399;">
+      <div class="alabel" style="color:#34d399;">🎯 <span class="lang-es">Lo que aplicaron hoy</span><span class="lang-en">What you applied today</span></div>
+      <p style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+        <span style="color:#a855f7;font-weight:600;">🤖 Vibecoding</span>
+        <span style="color:var(--border);">·</span>
+        <span style="color:#22d3ee;font-weight:600;">⚡ <span class="lang-es">npm run dev en localhost</span><span class="lang-en">npm run dev on localhost</span></span>
+        <span style="color:var(--border);">·</span>
+        <span style="color:#f59e0b;font-weight:600;">📦 git commit</span>
+        <span style="color:var(--border);">·</span>
+        <span style="color:#34d399;font-weight:600;">🐙 git push → GitHub</span>
+        <span style="color:var(--border);">·</span>
+        <span style="color:#94a3b8;font-weight:600;">▲ <span class="lang-es">Deploy en Vercel</span><span class="lang-en">Deploy on Vercel</span></span>
+        <span style="color:var(--border);">·</span>
+        <span style="color:#fbbf24;font-weight:600;">🌐 <span class="lang-es">Web propia live</span><span class="lang-en">Your own site, live</span></span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 19 · CIERRE               -->
+  <!-- ══════════════════════════ -->
+  <div class="slide slide-hero" data-index="17">
+    <div class="tag" style="background:rgba(124,58,237,0.15);color:#a855f7;">
+      <span class="lang-es">Para cerrar</span>
+      <span class="lang-en">To wrap up</span>
+    </div>
+    <h1>
+      <span class="lang-es">El futuro es<br><span class="gradient-text">construir rápido</span></span>
+      <span class="lang-en" style="font-size:0.5em;margin-top:8px;display:block;">The future is<br><span class="gradient-text">building fast</span></span>
+    </h1>
+    <p style="max-width:1100px;margin-top:12px;">
+      <span class="lang-es">No necesitás años de experiencia. Necesitás buenas ideas, las herramientas correctas y ganas de aprender haciendo.</span>
+      <span class="lang-en">You don't need years of experience. You need good ideas, the right tools, and the drive to learn by doing.</span>
+    </p>
+    <div style="margin-top:32px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
+      <a href="https://claude.ai" target="_blank" style="text-decoration:none;">
+        <span class="badge" style="background:rgba(124,58,237,0.15);border:1px solid rgba(168,85,247,0.4);color:#a855f7;font-size:14px;padding:10px 22px;">🤖 claude.ai</span>
+      </a>
+      <a href="https://github.com" target="_blank" style="text-decoration:none;">
+        <span class="badge" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:#34d399;font-size:14px;padding:10px 22px;">🐙 github.com</span>
+      </a>
+      <a href="https://vercel.com" target="_blank" style="text-decoration:none;">
+        <span class="badge" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.2);color:#e2e8f0;font-size:14px;padding:10px 22px;">▲ vercel.com</span>
+      </a>
+      <a href="https://console.anthropic.com" target="_blank" style="text-decoration:none;">
+        <span class="badge" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);color:#22d3ee;font-size:14px;padding:10px 22px;">🔑 console.anthropic.com</span>
+      </a>
+    </div>
+    <p style="margin-top:36px;font-size:12px;opacity:0.3;">
+      <span class="lang-es">Presentación generada con Vibecoding + Claude ✨</span>
+      <span class="lang-en">Presentation generated with Vibecoding + Claude ✨</span>
+    </p>
+  </div>
+
+</div>
+
+<div id="nav">
+  <button id="btn-prev" onclick="changeSlide(-1)" disabled>←</button>
+  <span id="progress">1 / 18</span>
+  <button id="btn-next" onclick="changeSlide(1)">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+  const progressEl = document.getElementById('progress');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    const prev = current;
+    setTimeout(() => slides[prev].classList.remove('exit'), 500);
+    current = index;
+    slides[current].classList.add('active');
+    updateUI();
+  }
+
+  function changeSlide(dir) { goTo(current + dir); }
+
+  function updateUI() {
+    progressEl.textContent = (current + 1) + ' / ' + slides.length;
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === slides.length - 1;
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'ArrowDown', ' '].includes(e.key)) { e.preventDefault(); changeSlide(1); }
+    if (['ArrowLeft', 'ArrowUp'].includes(e.key))          { e.preventDefault(); changeSlide(-1); }
+    if (e.key === 'Home') goTo(0);
+    if (e.key === 'End')  goTo(slides.length - 1);
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+  });
+
+  // Language toggle
+  const langToggle = document.getElementById('lang-toggle');
+  let enVisible = true;
+
+  langToggle.addEventListener('click', () => {
+    enVisible = !enVisible;
+    document.querySelectorAll('.lang-en').forEach(el => {
+      el.style.display = enVisible ? '' : 'none';
+    });
+    langToggle.textContent = enVisible ? 'ES | EN' : 'ES only';
+    langToggle.classList.toggle('en-hidden', !enVisible);
+  });
+</script>
+</body>
+</html>
