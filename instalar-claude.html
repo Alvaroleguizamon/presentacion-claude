@@ -367,15 +367,15 @@
   <div class="slide slide-hero active">
     <div class="tag" style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.4);color:#a855f7;">Guía de instalación</div>
     <h1>Cómo instalar<br><span class="gradient-text">Claude Code</span></h1>
-    <p style="max-width:600px;margin-bottom:28px;">Guía paso a paso para Windows y Mac.<br>Cubre todos los errores comunes: Node, Homebrew, permisos y más.</p>
+    <p style="max-width:640px;margin-bottom:28px;">Guía paso a paso para Windows y Mac.<br>El método que realmente funciona, sin errores de permisos.</p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
       <span class="os-badge os-mac">🍎 macOS</span>
       <span class="os-badge os-win">🪟 Windows</span>
     </div>
     <div class="flow" style="margin-top:32px;">
-      <div class="flow-step">1. Node.js</div>
+      <div class="flow-step">1. nvm</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-step">2. npm fix</div>
+      <div class="flow-step">2. Node.js</div>
       <div class="flow-arrow">→</div>
       <div class="flow-step">3. Claude Code</div>
       <div class="flow-arrow">→</div>
@@ -386,42 +386,42 @@
   <!-- SLIDE 2: ANTES DE EMPEZAR -->
   <div class="slide slide-prereq">
     <div class="tag" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.35);color:#fbbf24;">Prerequisitos</div>
-    <h2>¿Qué necesitás antes?</h2>
-    <p style="margin-bottom:20px;">Solo una cosa es obligatoria: <strong style="color:var(--text)">Node.js</strong>. Todo lo demás se instala como consecuencia.</p>
+    <h2>¿Qué necesitás?</h2>
+    <p style="margin-bottom:20px;">Para <strong style="color:var(--text)">Claude Code</strong> solo necesitás Node.js. Para <strong style="color:var(--text)">subir a GitHub</strong>, además necesitás Git.</p>
     <div class="grid-3">
       <div class="card">
         <div class="icon">🟢</div>
-        <h3>Node.js</h3>
-        <p>El motor que corre JavaScript. Claude Code lo necesita. <strong style="color:#34d399">Obligatorio.</strong></p>
-      </div>
-      <div class="card">
-        <div class="icon">📦</div>
-        <h3>npm</h3>
-        <p>El instalador de paquetes. Viene incluido con Node.js automáticamente.</p>
+        <h3>Node.js + npm</h3>
+        <p>El motor de JavaScript. Lo instalamos via <strong style="color:#34d399">nvm</strong> para evitar todos los errores de permisos.</p>
       </div>
       <div class="card">
         <div class="icon">🔑</div>
         <h3>Cuenta Anthropic</h3>
-        <p>Para el login. Podés usar cuenta de Claude Pro o una API Key de console.anthropic.com</p>
+        <p>Para el login de Claude Code. Sirve cuenta de <strong style="color:var(--text)">Claude Pro</strong> o una API Key gratis.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🐙</div>
+        <h3>Git (para GitHub)</h3>
+        <p>Solo si querés subir código. Mac lo trae preinstalado. Windows: descargar de <strong style="color:#fbbf24">git-scm.com</strong></p>
       </div>
     </div>
     <div class="analogy-box" style="margin-top:20px;">
-      <div class="alabel">💡 Aclaración importante</div>
-      <p>No necesitás <strong style="color:var(--text)">Homebrew</strong>, ni <strong style="color:var(--text)">gh CLI</strong>, ni <strong style="color:var(--text)">git</strong> para instalar Claude Code. Solo Node.js.</p>
+      <div class="alabel">⚠️ Por qué NO usar nodejs.org directo en Mac</div>
+      <p>El instalador de nodejs.org instala Node en <code style="color:#f87171">/usr/local</code> (requiere permisos de root) → <code style="color:#f87171">npm install -g</code> falla. Con <strong style="color:var(--text)">nvm</strong> Node se instala en tu carpeta de usuario → cero permisos, cero errores.</p>
     </div>
   </div>
 
   <!-- SLIDE 3: MAC PASO A PASO -->
   <div class="slide slide-mac">
-    <div class="tag" style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);color:#c084fc;">macOS</div>
-    <h2>Instalación en <span class="gradient-text">Mac</span></h2>
+    <div class="tag" style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);color:#c084fc;">macOS — método correcto</div>
+    <h2>Instalación en <span class="gradient-text">Mac</span> con nvm</h2>
     <div style="display:flex;gap:24px;width:100%;max-width:1300px;align-items:flex-start;margin-top:8px;">
       <ol class="step-list" style="flex:1;">
-        <li><strong>Abrí la Terminal</strong><br>Buscá "Terminal" en Spotlight (Cmd + Espacio)</li>
-        <li><strong>Verificá si ya tenés Node</strong><br>Escribí: <code style="color:#86efac;background:var(--surface2);padding:2px 6px;border-radius:4px;">node -v</code> — si aparece un número, listo.</li>
-        <li><strong>Si no tenés Node, instalalo</strong><br>Entrá a <strong style="color:#fbbf24">nodejs.org</strong> y bajá el instalador LTS para Mac.</li>
-        <li><strong>Instalá Claude Code</strong><br><code style="color:#86efac;background:var(--surface2);padding:2px 6px;border-radius:4px;">npm install -g @anthropic-ai/claude-code</code></li>
-        <li><strong>Iniciá sesión</strong><br><code style="color:#86efac;background:var(--surface2);padding:2px 6px;border-radius:4px;">claude</code> — te va a pedir hacer login con tu cuenta.</li>
+        <li><strong>Abrí la Terminal</strong><br>Spotlight → Cmd + Espacio → escribí "Terminal"</li>
+        <li><strong>Instalá nvm</strong><br>Pegá el comando curl de la derecha y ejecutalo. Reiniciá la terminal después.</li>
+        <li><strong>Instalá Node con nvm</strong><br><code style="color:#86efac;background:var(--surface2);padding:2px 6px;border-radius:4px;">nvm install --lts</code> — instala la última versión estable.</li>
+        <li><strong>Instalá Claude Code</strong><br><code style="color:#86efac;background:var(--surface2);padding:2px 6px;border-radius:4px;">npm install -g @anthropic-ai/claude-code</code> — sin sudo, sin errores.</li>
+        <li><strong>Iniciá sesión</strong><br><code style="color:#86efac;background:var(--surface2);padding:2px 6px;border-radius:4px;">claude</code> — login con tu cuenta Anthropic.</li>
       </ol>
       <div style="flex:1;">
         <div class="code-wrap">
@@ -430,15 +430,16 @@
             <div class="lang">Terminal — macOS</div>
           </div>
           <div class="code-block">
-<span class="comment"># 1. Verificar Node</span>
-<span class="cmd">node -v</span>
-<span class="ok"># → v22.x.x  ✓ OK</span>
+<span class="comment"># 1. Instalar nvm</span>
+<span class="cmd">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</span>
 
-<span class="comment"># 2. Instalar Claude Code</span>
+<span class="comment"># 2. Reiniciar la terminal, luego:</span>
+<span class="cmd">nvm install --lts</span>
+<span class="ok">Now using node v22.x.x  ✓</span>
+
+<span class="comment"># 3. Instalar Claude Code (sin sudo)</span>
 <span class="cmd">npm install -g @anthropic-ai/claude-code</span>
-
-<span class="comment"># 3. Verificar instalación</span>
-<span class="cmd">claude --version</span>
+<span class="ok">added 1 package  ✓</span>
 
 <span class="comment"># 4. Abrir Claude</span>
 <span class="cmd">claude</span>
@@ -493,64 +494,69 @@
     <div style="width:100%;max-width:1200px;margin-top:6px;display:flex;flex-direction:column;gap:10px;">
 
       <div class="error-card">
-        <div class="elabel">Error 1 — Mac / Linux</div>
-        <div class="ecode">npm: command not found</div>
-        <div class="efix"><span class="fix-label">Fix</span> No tenés Node instalado. Entrá a <strong style="color:#fbbf24">nodejs.org</strong> y descargá el instalador LTS.</div>
+        <div class="elabel">Error 1 — Mac</div>
+        <div class="ecode">EACCES: permission denied, mkdir '/usr/local/lib/node_modules'</div>
+        <div class="efix"><span class="fix-label">Fix</span> Tenés Node instalado desde nodejs.org (en /usr/local). Desinstalalo y usá <strong style="color:#34d399">nvm</strong> en su lugar: <code style="color:#86efac">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash</code> → reiniciá la terminal → <code style="color:#86efac">nvm install --lts</code></div>
       </div>
 
       <div class="error-card">
         <div class="elabel">Error 2 — Mac / Linux</div>
-        <div class="ecode">EACCES: permission denied, mkdir '/usr/local/lib/node_modules'</div>
-        <div class="efix"><span class="fix-label">Fix</span> No uses sudo. En cambio, corré: <code style="color:#86efac">mkdir ~/.npm-global && npm config set prefix '~/.npm-global'</code> y agregá <code style="color:#86efac">export PATH=~/.npm-global/bin:$PATH</code> a tu <code style="color:#86efac">~/.zshrc</code> o <code style="color:#86efac">~/.bashrc</code>. Luego reiniciá la terminal.</div>
+        <div class="ecode">nvm: command not found (después de instalar nvm)</div>
+        <div class="efix"><span class="fix-label">Fix</span> Cerrá la terminal completamente y volvé a abrirla. nvm modifica el archivo <code style="color:#86efac">~/.zshrc</code> y eso solo toma efecto en una terminal nueva.</div>
       </div>
 
       <div class="error-card">
         <div class="elabel">Error 3 — Windows</div>
         <div class="ecode">running scripts is disabled on this system</div>
-        <div class="efix"><span class="fix-label">Fix</span> Abrí PowerShell como Admin y corré: <code style="color:#86efac">Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></div>
+        <div class="efix"><span class="fix-label">Fix</span> Abrí PowerShell como Administrador y corré: <code style="color:#86efac">Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code> — luego volvé a intentar.</div>
       </div>
 
       <div class="error-card">
-        <div class="elabel">Error 4 — Mac / Linux</div>
-        <div class="ecode">brew: command not found</div>
-        <div class="efix"><span class="fix-label">Fix</span> Homebrew no es necesario para instalar Claude Code. Podés ignorar este error o instalarlo desde <strong style="color:#fbbf24">brew.sh</strong> si querés tenerlo disponible para otras cosas.</div>
+        <div class="elabel">Error 4 — Mac / Windows</div>
+        <div class="ecode">brew: command not found / gh: command not found</div>
+        <div class="efix"><span class="fix-label">Fix</span> Homebrew y gh CLI <strong style="color:var(--text)">no son necesarios</strong> para instalar Claude Code. Son herramientas opcionales. Podés ignorar este error.</div>
       </div>
 
     </div>
   </div>
 
-  <!-- SLIDE 6: EL TRUCO DEL SUDO -->
-  <div class="slide slide-errors">
-    <div class="tag" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);color:#f87171;">Permisos</div>
-    <h2>¿Por qué <span class="gradient-warm">no usar sudo</span>?</h2>
-    <p style="margin-bottom:20px;max-width:700px;">Muchos guías te dicen <code style="color:#f87171;background:var(--surface2);padding:2px 8px;border-radius:4px;">sudo npm install -g ...</code> pero esto crea problemas de permisos a largo plazo.</p>
-    <div class="grid-2" style="max-width:900px;">
-      <div class="card" style="border-color:rgba(239,68,68,0.3);">
-        <div class="icon">❌</div>
-        <h3 style="color:#f87171;">No hacer esto</h3>
-        <div style="background:#0d1117;border-radius:8px;padding:12px;margin-top:8px;font-family:monospace;font-size:13px;color:#f87171;">sudo npm install -g @anthropic-ai/claude-code</div>
-        <p style="margin-top:8px;font-size:12px;">Instala con permisos de root → futuros updates fallan → más errores.</p>
-      </div>
-      <div class="card" style="border-color:rgba(16,185,129,0.3);">
-        <div class="icon">✅</div>
-        <h3 style="color:#34d399;">Hacer esto en su lugar</h3>
-        <div class="code-wrap" style="margin-top:8px;">
-          <div class="code-block" style="border-radius:8px;font-size:12px;line-height:1.9;">
-<span class="comment"># Crear carpeta global de npm</span>
-<span class="cmd">mkdir ~/.npm-global</span>
-<span class="cmd">npm config set prefix '~/.npm-global'</span>
+  <!-- SLIDE 6: PARA SUBIR A GITHUB -->
+  <div class="slide slide-verify" style="background: radial-gradient(ellipse 70% 50% at 30% 0%, rgba(16,185,129,0.1) 0%, transparent 70%), var(--bg);">
+    <div class="tag" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);color:#34d399;">GitHub</div>
+    <h2>Para subir código a <span class="gradient-green">GitHub</span></h2>
+    <p style="margin-bottom:20px;max-width:700px;">Claude Code no necesita Git. Pero si querés subir tu proyecto a GitHub, sí vas a necesitarlo.</p>
+    <div class="grid-2" style="max-width:1100px;">
+      <div class="card" style="border-color:rgba(168,85,247,0.3);">
+        <div class="os-badge os-mac" style="margin-bottom:12px;">🍎 macOS</div>
+        <h3>Git ya viene incluido</h3>
+        <p style="font-size:13px;">Mac tiene Git preinstalado. Verificá con <code style="color:#86efac">git --version</code>. Si pide instalar Xcode Command Line Tools, aceptá.</p>
+        <div class="code-block" style="border-radius:8px;font-size:12px;margin-top:12px;line-height:1.9;">
+<span class="cmd">git --version</span>
+<span class="ok">git version 2.x.x  ✓</span>
 
-<span class="comment"># Agregar al PATH (en ~/.zshrc o ~/.bashrc)</span>
-<span class="str">export PATH=~/.npm-global/bin:$PATH</span>
-
-<span class="comment"># Recargar la terminal</span>
-<span class="cmd">source ~/.zshrc</span>
-
-<span class="comment"># Ahora instalar sin sudo</span>
-<span class="cmd">npm install -g @anthropic-ai/claude-code</span>
-          </div>
+<span class="comment"># Configurar tu identidad</span>
+<span class="cmd">git config --global user.name "Tu Nombre"</span>
+<span class="cmd">git config --global user.email "tu@email.com"</span>
         </div>
       </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.3);">
+        <div class="os-badge os-win" style="margin-bottom:12px;">🪟 Windows</div>
+        <h3>Descargar Git for Windows</h3>
+        <p style="font-size:13px;">Entrá a <strong style="color:#fbbf24">git-scm.com</strong> y descargá el instalador. Durante la instalación dejá todas las opciones por defecto.</p>
+        <div class="code-block" style="border-radius:8px;font-size:12px;margin-top:12px;line-height:1.9;">
+<span class="comment"># Después de instalar, en PowerShell:</span>
+<span class="cmd">git --version</span>
+<span class="ok">git version 2.x.x  ✓</span>
+
+<span class="comment"># Configurar tu identidad</span>
+<span class="cmd">git config --global user.name "Tu Nombre"</span>
+<span class="cmd">git config --global user.email "tu@email.com"</span>
+        </div>
+      </div>
+    </div>
+    <div class="analogy-box" style="margin-top:14px;max-width:1100px;">
+      <div class="alabel">💡 Para hacer push a GitHub</div>
+      <p>La primera vez que hagas <code style="color:#86efac">git push</code>, GitHub va a pedir tu usuario y contraseña. En la contraseña no pongas tu password, sino un <strong style="color:var(--text)">Personal Access Token</strong> que generás en github.com → Settings → Developer Settings → Tokens.</p>
     </div>
   </div>
 
@@ -627,7 +633,7 @@
 <!-- NAVEGACIÓN -->
 <div id="nav">
   <button id="prev" onclick="go(-1)" disabled>←</button>
-  <span id="progress">1 / 8</span>
+  <span id="progress">1 / 9</span>
   <button id="next" onclick="go(1)">→</button>
 </div>
 
