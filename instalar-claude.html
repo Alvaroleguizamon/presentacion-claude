@@ -520,7 +520,43 @@
     </div>
   </div>
 
-  <!-- SLIDE 6: PARA SUBIR A GITHUB -->
+  <!-- SLIDE 6: FIX PERMISOS NPM -->
+  <div class="slide slide-errors">
+    <div class="tag" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);color:#f87171;">Fix permisos — Mac</div>
+    <h2>Si <code style="font-size:0.7em;color:#f87171;">npm install -g</code> da <span class="gradient-warm">error de permisos</span></h2>
+    <p style="margin-bottom:16px;max-width:700px;">Alternativa al nvm: redirigir la carpeta global de npm a tu usuario. Cero sudo, cero root.</p>
+    <div class="grid-2" style="max-width:1100px;">
+      <div class="card" style="border-color:rgba(239,68,68,0.3);">
+        <div class="icon">❌</div>
+        <h3 style="color:#f87171;">Nunca hagas esto</h3>
+        <div class="code-block" style="border-radius:8px;font-size:13px;margin-top:10px;line-height:1.9;">
+<span class="err">sudo npm install -g @anthropic-ai/claude-code</span>
+        </div>
+        <p style="margin-top:10px;font-size:12px;">Instala con permisos de root → futuros updates fallan → más errores en cadena.</p>
+      </div>
+      <div class="card" style="border-color:rgba(16,185,129,0.3);">
+        <div class="icon">✅</div>
+        <h3 style="color:#34d399;">Hacé esto en su lugar</h3>
+        <div class="code-block" style="border-radius:8px;font-size:12px;margin-top:10px;line-height:1.9;">
+<span class="comment"># 1. Crear carpeta global en tu usuario</span>
+<span class="cmd">mkdir ~/.npm-global</span>
+<span class="cmd">npm config set prefix '~/.npm-global'</span>
+
+<span class="comment"># 2. Agregar al PATH — pegá esto en ~/.zshrc</span>
+<span class="str">export PATH=~/.npm-global/bin:$PATH</span>
+
+<span class="comment"># 3. Recargar la terminal</span>
+<span class="cmd">source ~/.zshrc</span>
+
+<span class="comment"># 4. Instalar sin sudo</span>
+<span class="cmd">npm install -g @anthropic-ai/claude-code</span>
+<span class="ok">added 1 package  ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: PARA SUBIR A GITHUB -->
   <div class="slide slide-verify" style="background: radial-gradient(ellipse 70% 50% at 30% 0%, rgba(16,185,129,0.1) 0%, transparent 70%), var(--bg);">
     <div class="tag" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);color:#34d399;">GitHub</div>
     <h2>Para subir código a <span class="gradient-green">GitHub</span></h2>
@@ -633,7 +669,7 @@
 <!-- NAVEGACIÓN -->
 <div id="nav">
   <button id="prev" onclick="go(-1)" disabled>←</button>
-  <span id="progress">1 / 9</span>
+  <span id="progress">1 / 10</span>
   <button id="next" onclick="go(1)">→</button>
 </div>
 
